@@ -1,0 +1,20 @@
+[22-Aug-2023 02:18:32 UTC] PHP Fatal error:  Uncaught Error: Class "Illuminate\Foundation\Support\Providers\RouteServiceProvider" not found in /home/nikaqxcy/public_html/app/Providers/RouteServiceProvider.php:8
+Stack trace:
+#0 {main}
+  thrown in /home/nikaqxcy/public_html/app/Providers/RouteServiceProvider.php on line 8
+[22-Aug-2023 02:18:33 UTC] PHP Fatal error:  Uncaught Error: Class "Illuminate\Foundation\Support\Providers\EventServiceProvider" not found in /home/nikaqxcy/public_html/app/Providers/EventServiceProvider.php:10
+Stack trace:
+#0 {main}
+  thrown in /home/nikaqxcy/public_html/app/Providers/EventServiceProvider.php on line 10
+[22-Aug-2023 02:18:36 UTC] PHP Fatal error:  Uncaught Error: Class "Illuminate\Support\ServiceProvider" not found in /home/nikaqxcy/public_html/app/Providers/BroadcastServiceProvider.php:8
+Stack trace:
+#0 {main}
+  thrown in /home/nikaqxcy/public_html/app/Providers/BroadcastServiceProvider.php on line 8
+[22-Aug-2023 02:18:37 UTC] PHP Fatal error:  Uncaught Error: Class "Illuminate\Foundation\Support\Providers\AuthServiceProvider" not found in /home/nikaqxcy/public_html/app/Providers/AuthServiceProvider.php:7
+Stack trace:
+#0 {main}
+  thrown in /home/nikaqxcy/public_html/app/Providers/AuthServiceProvider.php on line 7
+[22-Aug-2023 02:18:38 UTC] PHP Fatal error:  Uncaught Error: Class "Illuminate\Support\ServiceProvider" not found in /home/nikaqxcy/public_html/app/Providers/AppServiceProvider.php:10
+Stack trace:
+#0 {main}
+  thrown in /home/nikaqxcy/public_html/app/Providers/AppServiceProvider.php on line 10

@@ -1,0 +1,8 @@
+[19-Aug-2023 11:18:22 UTC] PHP Fatal error:  Uncaught Error: Class "Illuminate\Database\Seeder" not found in /home/nikaqxcy/public_html/database/seeds/DatabaseSeeder.php:5
+Stack trace:
+#0 {main}
+  thrown in /home/nikaqxcy/public_html/database/seeds/DatabaseSeeder.php on line 5
+[21-Aug-2023 10:49:34 UTC] PHP Fatal error:  Uncaught Error: Class "Illuminate\Database\Seeder" not found in /home/nikaqxcy/public_html/database/seeds/DatabaseSeeder.php:5
+Stack trace:
+#0 {main}
+  thrown in /home/nikaqxcy/public_html/database/seeds/DatabaseSeeder.php on line 5

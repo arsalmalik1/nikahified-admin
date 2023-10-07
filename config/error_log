@@ -1,0 +1,92 @@
+[22-Aug-2023 02:17:21 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function env() in /home/nikaqxcy/public_html/config/mail.php:16
+Stack trace:
+#0 {main}
+  thrown in /home/nikaqxcy/public_html/config/mail.php on line 16
+[22-Aug-2023 02:17:24 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function env() in /home/nikaqxcy/public_html/config/broadcasting.php:18
+Stack trace:
+#0 {main}
+  thrown in /home/nikaqxcy/public_html/config/broadcasting.php on line 18
+[22-Aug-2023 02:17:32 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function config() in /home/nikaqxcy/public_html/config/__settings.php:57
+Stack trace:
+#0 {main}
+  thrown in /home/nikaqxcy/public_html/config/__settings.php on line 57
+[22-Aug-2023 02:17:34 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function env() in /home/nikaqxcy/public_html/config/database.php:18
+Stack trace:
+#0 {main}
+  thrown in /home/nikaqxcy/public_html/config/database.php on line 18
+[22-Aug-2023 02:17:58 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function resource_path() in /home/nikaqxcy/public_html/config/view.php:17
+Stack trace:
+#0 {main}
+  thrown in /home/nikaqxcy/public_html/config/view.php on line 17
+[22-Aug-2023 02:17:59 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function env() in /home/nikaqxcy/public_html/config/queue.php:16
+Stack trace:
+#0 {main}
+  thrown in /home/nikaqxcy/public_html/config/queue.php on line 16
+[22-Aug-2023 02:18:03 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function env() in /home/nikaqxcy/public_html/config/logging.php:20
+Stack trace:
+#0 {main}
+  thrown in /home/nikaqxcy/public_html/config/logging.php on line 20
+[22-Aug-2023 02:18:12 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function env() in /home/nikaqxcy/public_html/config/lwSystem.php:11
+Stack trace:
+#0 {main}
+  thrown in /home/nikaqxcy/public_html/config/lwSystem.php on line 11
+[22-Aug-2023 02:18:16 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function env() in /home/nikaqxcy/public_html/config/hashing.php:32
+Stack trace:
+#0 {main}
+  thrown in /home/nikaqxcy/public_html/config/hashing.php on line 32
+[22-Aug-2023 02:18:18 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function env() in /home/nikaqxcy/public_html/config/mail.php:16
+Stack trace:
+#0 {main}
+  thrown in /home/nikaqxcy/public_html/config/mail.php on line 16
+[22-Aug-2023 02:18:19 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function env() in /home/nikaqxcy/public_html/config/broadcasting.php:18
+Stack trace:
+#0 {main}
+  thrown in /home/nikaqxcy/public_html/config/broadcasting.php on line 18
+[22-Aug-2023 02:18:20 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function env() in /home/nikaqxcy/public_html/config/cache.php:21
+Stack trace:
+#0 {main}
+  thrown in /home/nikaqxcy/public_html/config/cache.php on line 21
+[22-Aug-2023 02:18:23 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function env() in /home/nikaqxcy/public_html/config/filesystems.php:16
+Stack trace:
+#0 {main}
+  thrown in /home/nikaqxcy/public_html/config/filesystems.php on line 16
+[22-Aug-2023 02:18:24 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function config() in /home/nikaqxcy/public_html/config/__settings.php:57
+Stack trace:
+#0 {main}
+  thrown in /home/nikaqxcy/public_html/config/__settings.php on line 57
+[22-Aug-2023 02:18:26 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function env() in /home/nikaqxcy/public_html/config/liap.php:31
+Stack trace:
+#0 {main}
+  thrown in /home/nikaqxcy/public_html/config/liap.php on line 31
+[22-Aug-2023 02:18:27 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function env() in /home/nikaqxcy/public_html/config/sms.php:13
+Stack trace:
+#0 {main}
+  thrown in /home/nikaqxcy/public_html/config/sms.php on line 13
+[22-Aug-2023 02:18:28 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function env() in /home/nikaqxcy/public_html/config/session.php:21
+Stack trace:
+#0 {main}
+  thrown in /home/nikaqxcy/public_html/config/session.php on line 21
+[22-Aug-2023 02:18:29 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function env() in /home/nikaqxcy/public_html/config/yes-file-storage.php:80
+Stack trace:
+#0 {main}
+  thrown in /home/nikaqxcy/public_html/config/yes-file-storage.php on line 80
+[22-Aug-2023 02:18:39 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function env() in /home/nikaqxcy/public_html/config/database.php:18
+Stack trace:
+#0 {main}
+  thrown in /home/nikaqxcy/public_html/config/database.php on line 18
+[22-Aug-2023 02:18:40 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function app_path() in /home/nikaqxcy/public_html/config/__tech.php:4
+Stack trace:
+#0 {main}
+  thrown in /home/nikaqxcy/public_html/config/__tech.php on line 4
+[22-Aug-2023 02:18:42 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function env() in /home/nikaqxcy/public_html/config/app.php:16
+Stack trace:
+#0 {main}
+  thrown in /home/nikaqxcy/public_html/config/app.php on line 16
+[22-Aug-2023 07:57:59 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function env() in /home/nikaqxcy/public_html/config/filesystems.php:16
+Stack trace:
+#0 {main}
+  thrown in /home/nikaqxcy/public_html/config/filesystems.php on line 16
+[22-Aug-2023 23:10:51 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function env() in /home/nikaqxcy/public_html/config/services.php:18
+Stack trace:
+#0 {main}
+  thrown in /home/nikaqxcy/public_html/config/services.php on line 18

@@ -1,0 +1,4 @@
+[17-Aug-2023 18:55:50 UTC] PHP Fatal error:  Uncaught Error: Class "Illuminate\Routing\Controller" not found in /home/nikaqxcy/public_html/app/Http/Controllers/Controller.php:10
+Stack trace:
+#0 {main}
+  thrown in /home/nikaqxcy/public_html/app/Http/Controllers/Controller.php on line 10

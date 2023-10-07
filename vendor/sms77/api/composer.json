@@ -1,0 +1,58 @@
+{
+    "authors": [
+        {
+            "email": "support@seven.io",
+            "homepage": "https://www.seven.io",
+            "name": "seven communications GmbH & Co. KG",
+            "role": "Developer"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Sms77\\Api\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Sms77\\Tests\\": "tests/"
+        }
+    },
+    "config": {
+        "platform": {
+            "php": "7.3"
+        }
+    },
+    "description": "Official API Client for requesting the seven.io SMS Gateway.",
+    "homepage": "https://github.com/seven-io/php-client",
+    "keywords": [
+        "2fa",
+        "sms",
+        "gateway",
+        "text2speech",
+        "hlr",
+        "cnam",
+        "mnp",
+        "tts"
+    ],
+    "license": "MIT",
+    "name": "sms77/api",
+    "require": {
+        "php": ">=7.3",
+        "ext-ctype": "*",
+        "ext-curl": "*",
+        "ext-mbstring": "*",
+        "ext-json": "*"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9",
+        "ext-soap": "*",
+        "ext-simplexml": "*"
+    },
+    "support": {
+        "docs": "https://github.com/seven-io/php-client",
+        "email": "support@seven.io",
+        "rss": "https://www.seven.io/en/feed/",
+        "source": "https://github.com/seven-io/php-client"
+    },
+    "type": "library"
+}

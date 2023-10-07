@@ -1,0 +1,8 @@
+[22-Aug-2023 02:20:44 UTC] PHP Fatal error:  Uncaught Error: Class "Illuminate\Foundation\Auth\User" not found in /home/nikaqxcy/public_html/app/User.php:8
+Stack trace:
+#0 {main}
+  thrown in /home/nikaqxcy/public_html/app/User.php on line 8
+[22-Aug-2023 09:39:35 UTC] PHP Fatal error:  Uncaught Error: Class "Illuminate\Foundation\Auth\User" not found in /home/nikaqxcy/public_html/app/User.php:8
+Stack trace:
+#0 {main}
+  thrown in /home/nikaqxcy/public_html/app/User.php on line 8
