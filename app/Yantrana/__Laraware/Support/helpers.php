@@ -15,6 +15,9 @@
  * State route for StateViaRoute function
  *
  *-------------------------------------------------------- */
+
+use App\Yantrana\Components\User\Models\UserSubscription;
+
 Route::get('/state-via-route/{stateRouteInfo}', [
     'as' => '__laraware.state_via_route',
     'uses' => 'App\Yantrana\__Laraware\Support\CommonSupport@stateViaRoute',
@@ -1178,5 +1181,15 @@ if (! function_exists('abortIf')) {
                 'data' => [],
             ])));
         }
+    }
+
+    function getUserSubscribedPlanId($userId){
+        $planId = 0;
+        $where = [['users__id', '=', $userId]];
+        $subscription = UserSubscription::select('_id', 'plan_id')->where($where)->first();
+        if($subscription){
+            $planId = $subscription->plan_id;
+        }
+        return $planId;
     }
 }

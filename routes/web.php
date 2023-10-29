@@ -822,6 +822,50 @@ Route::group([
             });
 
             /*
+            Manage Plans Routes
+            ----------------------------------------------------------------------- */
+            Route::group([
+                'namespace' => 'Plan\Controllers',
+                'prefix' => 'manage/plans',
+            ], function () {
+                //list
+                Route::get('/list', [
+                    'as' => 'manage.plan.read.list',
+                    'uses' => 'PlanController@getPlanList',
+                ]);
+
+                // Plan add view
+                Route::get('/add-plan', [
+                    'as' => 'manage.plan.add.view',
+                    'uses' => 'PlanController@planAddView',
+                ]);
+
+                // Plan add
+                Route::post('/add-plan-process', [
+                    'as' => 'manage.plan.write.add',
+                    'uses' => 'PlanController@addPlan',
+                ]);
+
+                // Plan edit view
+                Route::get('/{planUId}/edit-plan', [
+                    'as' => 'manage.plan.edit.view',
+                    'uses' => 'PlanController@planEditView',
+                ]);
+
+                // Plan edit process
+                Route::post('/{planUId}/edit-plan-process', [
+                    'as' => 'manage.plan.write.edit',
+                    'uses' => 'PlanController@editPlan',
+                ]);
+
+                // Plan delete view
+                Route::post('/{planUId}/delete-plan', [
+                    'as' => 'manage.plan.write.delete',
+                    'uses' => 'PlanController@processDeletePlan',
+                ]);
+            });
+
+            /*
             Manage Credit Package Routes
             ----------------------------------------------------------------------- */
             Route::group([

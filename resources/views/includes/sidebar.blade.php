@@ -71,6 +71,12 @@ $currentRouteName = Route::getCurrentRoute()->getName();
             <span><?= __tr('User Uploads') ?></span>
         </a>
     </li>
+    <li class="nav-item <?= makeLinkActive('manage.plan.read.list', $currentRouteName) ?>">
+        <a class="nav-link lw-ajax-link-action lw-action-with-url" href="<?= route('manage.plan.read.list') ?>">
+            <i class="fas fa-users"></i>
+            <span><?= __tr('Plans') ?></span>
+        </a>
+    </li>
     <!-- Nav Item - Utilities Collapse Menu -->
     <li class="nav-item lw-settings-sub-menu-items">
         <a class="nav-link lw-ajax-link-action lw-action-with-url <?= makeLinkActive('manage.configuration.read', $currentRouteName) ?> <?= makeLinkActive('manage.configuration.read', $currentRouteName,'', 'collapsed') ?>" href="<?= route('manage.dashboard') ?>" data-toggle="collapse" data-target="#collapseUtilities"

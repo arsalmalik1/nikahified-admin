@@ -1253,3 +1253,19 @@ if (! function_exists('getAgeDate')) {
        return Carbon::today()->subYears($age + ($isForSearch ? 1 : 0))->endOfDay();
     }
 }
+
+/**
+ * Update expired subscriptions to cancelled
+ */
+if(! function_exists('updateSubscriptionsStatus')) {
+    function updateSubscriptionsStatus() {
+        $currentDate = now()->format("Y-m-d H:i:s");
+        //echo $currentDate;
+        $expiredSubscriptions = UserSubscription::where([['status', '=', 1], ['expiry_at', '<=', $currentDate]])->get();
+        if($expiredSubscriptions->isNotEmpty()){
+            $sIds = $expiredSubscriptions->pluck('_id')->toArray();
+            print_r($sIds);
+            UserSubscription::whereIn('_id', $sIds)->update(['status' => 0]); // 0 = Cancelled
+        }
+    }
+}

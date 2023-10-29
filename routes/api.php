@@ -103,6 +103,30 @@ Route::group([
                     'uses' => 'SocialAccessController@handleApiProviderCallback',
                 ]);
             });
+
+        // Plan related routes
+        Route::group([
+            'namespace' => 'Plan\ApiControllers',
+        ], function () {
+            // Get all plans
+            Route::get('/get-plans/{user_id?}', [
+                'as' => 'api.plan.read.list',
+                'uses' => 'ApiPlanController@getPlanList',
+            ]);
+        });
+    });
+
+
+    // Stripe webhook related routes
+    Route::group([
+        'namespace' => 'User\ApiControllers',
+        'prefix' => 'webhook',
+    ], function () {
+        // Handle Stripe webhook
+        Route::post('/handle-request', [
+            'as' => 'api.webhook.handle-request',
+            'uses' => 'StripeWebhookController@handleWebhook',
+        ]);
     });
 
     /*
