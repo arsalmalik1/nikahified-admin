@@ -114,6 +114,18 @@ Route::group([
                 'uses' => 'ApiPlanController@getPlanList',
             ]);
         });
+
+        // Payment related routes
+        Route::group([
+            'namespace' => 'User\ApiControllers',
+        ], function () {
+            // Get user payment
+            Route::get('/get-user-payment/{user_id}', [
+                'as' => 'api.payment.read.list',
+                'uses' => 'ApiPaymentController@getUserPayment',
+            ]);
+        });
+
     });
 
 
