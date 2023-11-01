@@ -129,6 +129,17 @@ Route::group([
     });
 
 
+    // Payment related routes
+    Route::group([
+        'namespace' => 'User\ApiControllers',
+    ], function () {
+        // Create user payment
+        Route::post('/create-user-payment', [
+            'as' => 'api.payment.create',
+            'uses' => 'ApiPaymentController@createUserPayment',
+        ]);
+    });
+
     // Stripe webhook related routes
     Route::group([
         'namespace' => 'User\ApiControllers',
@@ -258,7 +269,10 @@ Route::group([
                 'as' => 'api.user.write.receiver.call_busy',
                 'uses' => 'ApiMessengerController@receiverCallBusy',
             ]);
+
         });
+
+
 
         /*
         Home Component Related Routes

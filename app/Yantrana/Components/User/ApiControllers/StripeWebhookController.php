@@ -33,7 +33,7 @@ class StripeWebhookController extends BaseController
         // Check if it's a charge.succeeded event
         if ($data['type'] === 'charge.succeeded') {
             // Access charge data
-            $chargeData = $data['data']['object'];
+            /*$chargeData = $data['data']['object'];
 
             $chargeId = $chargeData['id'];
             $amount = $chargeData['amount'];
@@ -92,7 +92,7 @@ class StripeWebhookController extends BaseController
                         UserSubscription::insert($subscriptionData);
                     }
                 }
-            }
+            }*/
 
         }
         else if($data['type'] === 'charge.failed') {

@@ -8,9 +8,13 @@
 namespace App\Yantrana\Components\User;
 
 use App\Yantrana\Base\BaseEngine;
+use App\Yantrana\Components\Plan\Models\PlanModel;
 use App\Yantrana\Components\User\Interfaces\PaymentEngineInterface;
+use App\Yantrana\Components\User\Models\UserPayment;
+use App\Yantrana\Components\User\Models\UserSubscription;
 use App\Yantrana\Components\User\Repositories\PaymentRepository;
 use App\Yantrana\Components\User\Repositories\UserRepository;
+use Carbon\Carbon;
 
 class PaymentEngine extends BaseEngine implements PaymentEngineInterface
 {
@@ -97,6 +101,71 @@ class PaymentEngine extends BaseEngine implements PaymentEngineInterface
         ];
 
         return $this->customTableResponse($paymentCollection, $requireColumns);
+    }
+
+    /**
+     * Process user update password request.
+     *
+     * @param  array  $inputData
+     * @return array
+     *---------------------------------------------------------------- */
+    public function processCreatePayment($inputData)
+    {
+        $chargeId = $inputData['sale_id'];
+        $amount = $inputData['amount'];
+        $currency = $inputData['currency'];
+        $customerId = $inputData['customer_id'];
+        $chargedAt = $inputData['charge_created'];
+        $planId = $inputData['plan_id'];
+        $userId = $inputData['user_id'];
+
+        $paymentCount = UserPayment::where('sale_id', $chargeId)->count();
+        if($paymentCount == 0){
+
+            // Example: Log the charge information
+            \Log::info('Charge ID: ' . $chargeId . ', Amount: ' . $amount . ', Currency: ' . $currency);
+
+            // Additional operations based on the charge.succeeded event
+            // Your handling logic here...
+            $plan = PlanModel::find($planId);
+            if($plan){
+                // Convert Unix timestamp to a Carbon instance
+                $dateTime = Carbon::createFromTimestamp($chargedAt);
+                $formattedDate = $dateTime->format('Y-m-d H:i:s');
+
+                $paymentData = [
+                    'user__id' => $userId,
+                    'customer_id' => $customerId,
+                    'plan_id' => $planId,
+                    'sale_id' => $chargeId,
+                    'amount' => $amount,
+                    'currency' => $currency,
+                    'status' => 'success',
+                    'payment_gateway' => 'stripe',
+                    'charged_at' => $formattedDate
+                ];
+                $paymentId = UserPayment::insertGetId($paymentData);
+                $subscription = UserSubscription::where('users__id', $userId)->first();
+                $expiryAt = now()->addMonths($plan->duration)->format("Y-m-d H:i:s");
+                $subscriptionData = [
+                    'plan_id' => $planId,
+                    'expiry_at' => $expiryAt,
+                    'users__id' => $userId,
+                    'status' => 1,
+                    'payment_id' => $paymentId
+                ];
+                if($subscription){
+                    UserSubscription::where('users__id', $userId)->update($subscriptionData);
+                }
+                else{
+                    UserSubscription::insert($subscriptionData);
+                }
+
+                return $this->engineReaction(1, ['show_message' => true], __tr('User payment saved successfully.'));
+            }
+            return $this->engineReaction(1, ['show_message' => true], __tr('Invalid plan id submitted.'));
+        }
+        return $this->engineReaction(1, ['show_message' => true], __tr('This sale id already exists.'));
     }
 
 }
