@@ -32,6 +32,17 @@ class StripeWebhookController extends BaseController
 
         // Check if it's a charge.succeeded event
         if ($data['type'] === 'charge.succeeded') {
+            $chargeData = $data['data']['object'];
+            $chargeId = $chargeData['id'];
+            $payment = UserPayment::where('sale_id', $chargeId)->first();
+            if($payment){
+                $payment->status = 'success';
+                $payment->save();
+                UserSubscription::where('payment_id', $payment->_id)->update(['status' => 1]);
+            }
+
+
+
             // Access charge data
             /*$chargeData = $data['data']['object'];
 
@@ -96,7 +107,14 @@ class StripeWebhookController extends BaseController
 
         }
         else if($data['type'] === 'charge.failed') {
-
+            $chargeData = $data['data']['object'];
+            $chargeId = $chargeData['id'];
+            $payment = UserPayment::where('sale_id', $chargeId)->first();
+            if($payment){
+                $payment->status = 'failed';
+                $payment->save();
+                UserSubscription::where('payment_id', $payment->_id)->update(['status' => 0]);
+            }
         }
 
         return response()->json(['success' => true]);
