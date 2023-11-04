@@ -38,9 +38,27 @@ class PlanRequest extends BaseRequest
             ],
             'price' => 'required|integer',
             'duration' => 'required|integer',
-            'description' => 'required'
+            'description' => 'required|string',
         ];
 
         return $rules;
     }
+
+    protected function prepareForValidation()
+    {
+        $this->request->set('description', $this->clean($this->request->get('description')));
+    }
+
+    protected function clean($input)
+    {
+        // Remove any malicious code.
+        $input = strip_tags($input,'<p><div><ul><ol><dl><li><pre><blockquote><a><span><br><hr><img><b><i><strong><em><u><s><sub><sup><table><tr><td><th><embed>');
+
+        // Escape any special characters.
+        $input = htmlspecialchars($input);
+
+        return $input;
+    }
+
+
 }

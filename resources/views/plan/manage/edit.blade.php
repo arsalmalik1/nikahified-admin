@@ -51,7 +51,7 @@
 						<div class="col-sm-12 mb-6 mb-sm-0">
 							<label for="description"><?= __tr('Description') ?></label>
 							<input type="hidden" name="description" id="description">
-							<textarea id="description_editor" class="form-control" name="description_editor" required><?= $planEditData['description'] ?></textarea>
+							<textarea id="description_editor" class="form-control" name="description_editor" required>{!! $planEditData['description'] !!}</textarea>
 
 							</div>
 					</div>

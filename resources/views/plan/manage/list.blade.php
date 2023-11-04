@@ -39,7 +39,7 @@
 							</td>--}}
 							<td><?= $plan['title'] ?></td>
 							<td class="text-right"><?= priceFormat($plan['price'], true) ?></td>
-							<td><?= $plan['description'] ?></td>
+							<td><?= html_entity_decode($plan['description']) ?></td>
 							<td><?= $plan['duration'] ?></td>
 							<td><?= $plan['created_at'] ?></td>
 							<td>
