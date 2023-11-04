@@ -14,109 +14,64 @@ use App\Yantrana\Components\User\Models\UserPayment;
 use App\Yantrana\Components\User\Models\UserSubscription;
 use Illuminate\Support\Carbon;
 use Illuminate\Http\Request;
+use Stripe\Exception\SignatureVerificationException;
+use Stripe\Webhook;
 
 class StripeWebhookController extends BaseController
 {
     public function handleWebhook(Request $request)
     {
-        // Verify the Stripe signature if required
-
-        // Retrieve the JSON payload from the request
         $payload = $request->getContent();
-
+        $secret = getenv('STRIPE_SECRET');
+        //echo $secret; echo '<br>';
+        //print_r($request->header('stripe-signature')); exit;
         // You can log the entire payload for inspection
         \Log::info('Stripe Webhook Payload: ' . $payload);
 
-        // Parse the JSON payload
-        $data = json_decode($payload, true);
+        // Verify the Stripe signature if required
+        try {
+            $event = Webhook::constructEvent(
+                $payload,
+                $request->header('stripe-signature'),
+                $secret
+            );
 
-        // Check if it's a charge.succeeded event
-        if ($data['type'] === 'charge.succeeded') {
-            $chargeData = $data['data']['object'];
-            $chargeId = $chargeData['id'];
-            $payment = UserPayment::where('sale_id', $chargeId)->first();
-            if($payment){
-                $payment->status = 'success';
-                $payment->save();
-                UserSubscription::where('payment_id', $payment->_id)->update(['status' => 1]);
-            }
+            // Event verified, process the event
+            // For example, $event->type will contain the event type
 
+            // Parse the JSON payload
+            $data = json_decode($payload, true);
 
-
-            // Access charge data
-            /*$chargeData = $data['data']['object'];
-
-            $chargeId = $chargeData['id'];
-            $amount = $chargeData['amount'];
-            $currency = $chargeData['currency'];
-            $customerId = $chargeData['customer'];
-            $chargedAt = $chargeData['created'];
-
-            $paymentCount = UserPayment::where('sale_id', $chargeId)->count();
-            if($paymentCount == 0){
-                $planId = 0;
-                $userId = 0;
-                // Access the metadata if present
-                if (isset($chargeData['metadata'])) {
-                    $customMetadata = $chargeData['metadata'];
-                    $planId = $customMetadata['plan_id'];
-                    $userId = $customMetadata['user_id'];
+            // Check if it's a charge.succeeded event
+            if ($data['type'] === 'charge.succeeded') {
+                $chargeData = $data['data']['object'];
+                $chargeId = $chargeData['id'];
+                $payment = UserPayment::where('sale_id', $chargeId)->first();
+                if($payment){
+                    $payment->status = 'success';
+                    $payment->save();
+                    UserSubscription::where('payment_id', $payment->_id)->update(['status' => 1]);
                 }
 
-                // Convert Unix timestamp to a Carbon instance
-                $dateTime = Carbon::createFromTimestamp($chargedAt);
-                $formattedDate = $dateTime->format('Y-m-d H:i:s');
-
-                // Example: Log the charge information
-                \Log::info('Charge ID: ' . $chargeId . ', Amount: ' . $amount . ', Currency: ' . $currency);
-
-                // Additional operations based on the charge.succeeded event
-                // Your handling logic here...
-                $plan = PlanModel::find($planId);
-                if($plan){
-
-                    $paymentData = [
-                        'user__id' => $userId,
-                        'customer_id' => $customerId,
-                        'plan_id' => $planId,
-                        'sale_id' => $chargeId,
-                        'amount' => $amount,
-                        'currency' => $currency,
-                        'status' => 'success',
-                        'payment_gateway' => 'stripe',
-                        'charged_at' => $formattedDate
-                    ];
-                    $paymentId = UserPayment::insertGetId($paymentData);
-                    $subscription = UserSubscription::where('users__id', $userId)->first();
-                    $expiryAt = now()->addMonths($plan->duration)->format("Y-m-d H:i:s");
-                    $subscriptionData = [
-                        'plan_id' => $planId,
-                        'expiry_at' => $expiryAt,
-                        'users__id' => $userId,
-                        'status' => 1,
-                        'payment_id' => $paymentId
-                    ];
-                    if($subscription){
-                        UserSubscription::where('users__id', $userId)->update($subscriptionData);
-                    }
-                    else{
-                        UserSubscription::insert($subscriptionData);
-                    }
-                }
-            }*/
-
-        }
-        else if($data['type'] === 'charge.failed') {
-            $chargeData = $data['data']['object'];
-            $chargeId = $chargeData['id'];
-            $payment = UserPayment::where('sale_id', $chargeId)->first();
-            if($payment){
-                $payment->status = 'failed';
-                $payment->save();
-                UserSubscription::where('payment_id', $payment->_id)->update(['status' => 0]);
             }
-        }
+            else if($data['type'] === 'charge.failed') {
+                $chargeData = $data['data']['object'];
+                $chargeId = $chargeData['id'];
+                $payment = UserPayment::where('sale_id', $chargeId)->first();
+                if($payment){
+                    $payment->status = 'failed';
+                    $payment->save();
+                    UserSubscription::where('payment_id', $payment->_id)->update(['status' => 0]);
+                }
+            }
 
-        return response()->json(['success' => true]);
+            \Log::info('Stripe webhook handled: ' . $event->id);
+            return response()->json(['success' => true]);
+
+        } catch (SignatureVerificationException $e) {
+            // Invalid signature
+            \Log::warning('Stripe webhook signature verification failed: ' . $e->getMessage());
+            return response()->json(['success' => false, 'message' => 'Not authorized'])->setStatusCode(400);
+        }
     }
 }

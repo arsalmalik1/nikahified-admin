@@ -208,7 +208,10 @@ class PlanEngine extends BaseEngine implements PlanEngineInterface
             '_uid',
             'title',
             'duration',
-            'description',
+            'price',
+            'description' => function($key) {
+                return html_entity_decode($key['description']);
+            },
             'is_subscribed' => function ($key) use ($user_id){
                 return (getUserSubscribedPlanId($user_id) == $key['_id']);
             },
