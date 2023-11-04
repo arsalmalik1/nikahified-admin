@@ -1192,4 +1192,15 @@ if (! function_exists('abortIf')) {
         }
         return $planId;
     }
+
+    function getUserSubscriptionExpiry($userId, $planId){
+        $expiryAt = NULL;
+        $where = [['users__id', '=', $userId], ['status', '=', 1], ['plan_id', '=', $planId]];
+        $subscription = UserSubscription::select('_id', 'plan_id', 'expiry_at')->where($where)->first();
+        if($subscription){
+            $expiryAt = now()->parse($subscription->expiry_at)->format("Y-m-d H:i:s");
+        }
+        return $expiryAt;
+    }
+
 }

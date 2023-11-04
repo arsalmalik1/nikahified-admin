@@ -1264,8 +1264,7 @@ if(! function_exists('updateSubscriptionsStatus')) {
         $expiredSubscriptions = UserSubscription::where([['status', '=', 1], ['expiry_at', '<=', $currentDate]])->get();
         if($expiredSubscriptions->isNotEmpty()){
             $sIds = $expiredSubscriptions->pluck('_id')->toArray();
-            print_r($sIds);
-            UserSubscription::whereIn('_id', $sIds)->update(['status' => 0]); // 0 = Cancelled
+            UserSubscription::whereIn('_id', $sIds)->update(['status' => 2]); // 0 = Expired
         }
     }
 }

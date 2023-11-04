@@ -215,6 +215,9 @@ class PlanEngine extends BaseEngine implements PlanEngineInterface
             'is_subscribed' => function ($key) use ($user_id){
                 return (getUserSubscribedPlanId($user_id) == $key['_id']);
             },
+            'expiry_date' => function($key) use($user_id) {
+                return getUserSubscriptionExpiry($user_id, $key['_id']);
+            },
             'created_at' => function ($pageData) {
                 return formatDate($pageData['created_at']);
             },

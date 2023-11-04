@@ -47,4 +47,12 @@ class ApiPaymentController extends BaseController
         $processReaction = $this->paymentEngine->processCreatePayment($request->all());
         return $this->processResponse($processReaction, [], [], true);
     }
+
+    public function cancelUserSubscription(Request $request, $user_id)
+    {
+        $processReaction = $this->paymentEngine->processCancelSubscription($user_id);
+        return $this->processResponse($processReaction, [], [], true);
+    }
+
+
 }

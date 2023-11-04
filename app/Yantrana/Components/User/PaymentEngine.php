@@ -145,7 +145,7 @@ class PaymentEngine extends BaseEngine implements PaymentEngineInterface
                     'charged_at' => $formattedDate
                 ];
                 $paymentId = UserPayment::insertGetId($paymentData);
-                $subscription = UserSubscription::where('users__id', $userId)->first();
+                $subscription = UserSubscription::where([['users__id', '=', $userId], ['status', '=', 1]])->first();
                 $expiryAt = now()->addMonths($plan->duration)->format("Y-m-d H:i:s");
                 $subscriptionData = [
                     'plan_id' => $planId,
@@ -155,17 +155,23 @@ class PaymentEngine extends BaseEngine implements PaymentEngineInterface
                     'payment_id' => $paymentId
                 ];
                 if($subscription){
-                    UserSubscription::where('users__id', $userId)->update($subscriptionData);
+                    UserSubscription::where('_id', $subscription->_id)->update(['status' => 0]);
                 }
-                else{
-                    UserSubscription::insert($subscriptionData);
-                }
+                UserSubscription::insert($subscriptionData);
 
                 return $this->engineReaction(1, ['show_message' => true], __tr('User payment saved successfully.'));
             }
             return $this->engineReaction(1, ['show_message' => true], __tr('Invalid plan id submitted.'));
         }
         return $this->engineReaction(1, ['show_message' => true], __tr('This sale id already exists.'));
+    }
+
+    public function processCancelSubscription($userId){
+        $res = UserSubscription::where([['users__id', '=', $userId], ['status', '=', 1]])->update(['status' => 0]);
+        if($res){
+            return $this->engineReaction(1, ['show_message' => true], __tr('Subscription cancelled successfully.'));
+        }
+        return $this->engineReaction(1, ['show_message' => true], __tr('Invalid user id submitted.'));
     }
 
 }

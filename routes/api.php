@@ -140,6 +140,16 @@ Route::group([
         ]);
     });
 
+    Route::group([
+        'namespace' => 'User\ApiControllers',
+    ], function () {
+        // Cancel subscription
+        Route::get('/cancel-subscription/{user_id}', [
+            'as' => 'api.subscription.cancel',
+            'uses' => 'ApiPaymentController@cancelUserSubscription',
+        ]);
+    });
+
     // Stripe webhook related routes
     Route::group([
         'namespace' => 'User\ApiControllers',
