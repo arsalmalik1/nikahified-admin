@@ -858,10 +858,16 @@ Route::group([
                     'uses' => 'PlanController@editPlan',
                 ]);
 
-                // Plan delete view
+                // Plan delete
                 Route::post('/{planUId}/delete-plan', [
                     'as' => 'manage.plan.write.delete',
                     'uses' => 'PlanController@processDeletePlan',
+                ]);
+
+                // Plan update
+                Route::post('/{planUId}/update-plan-status', [
+                    'as' => 'manage.plan.update-status',
+                    'uses' => 'PlanController@processUpdatePlanStatus',
                 ]);
             });
 

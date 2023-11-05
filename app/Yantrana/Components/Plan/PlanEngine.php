@@ -10,6 +10,7 @@ namespace App\Yantrana\Components\Plan;
 use App\Yantrana\Base\BaseEngine;
 use App\Yantrana\Components\Plan\Interfaces\PlanEngineInterface;
 use App\Yantrana\Components\Plan\Repositories\PlanRepository;
+use App\Yantrana\Components\User\Models\UserSubscription;
 use App\Yantrana\Components\User\Repositories\UserRepository;
 
 class PlanEngine extends BaseEngine implements PlanEngineInterface
@@ -58,6 +59,7 @@ class PlanEngine extends BaseEngine implements PlanEngineInterface
                     'price' => intval($plan['price']),
                     'description' => $plan['description'],
                     'duration' => $plan['duration'],
+                    'status' => $plan['status'],
                     'created_at' => formatDate($plan['created_at']),
                     'updated_at' => formatDate($plan['updated_at'])
                 ];
@@ -195,6 +197,39 @@ class PlanEngine extends BaseEngine implements PlanEngineInterface
     }
 
     /**
+     * Process plan update status.
+     *
+     * @param int planUId
+     * @return array
+     *---------------------------------------------------------------- */
+    public function processUpdatePlanStatus($planUId, $action)
+    {
+        $planCollection = $this->planRepository->fetch($planUId);
+
+        //if is empty then show error message
+        if (__isEmpty($planCollection)) {
+            return $this->engineReaction(1, null, __tr('Plan does not exist'));
+        }
+
+        $isPlanUpdate = false;
+        $updateData = [
+            'status' => ($action == 'active') ? 1 : 0
+        ];
+
+        // Check if plan updated
+        if ($this->planRepository->updatePlan($planCollection, $updateData)) {
+            $isPlanUpdate = true;
+        }
+
+        // Check if plan updated
+        if ($isPlanUpdate) {
+            return $this->engineReaction(1, null, __tr('Plan status updated successfully.'));
+        }
+        //error response
+        return $this->engineReaction(2, null, __tr('Plan not updated.'));
+    }
+
+    /**
      * get Api notification list data.
      *
      *
@@ -203,12 +238,34 @@ class PlanEngine extends BaseEngine implements PlanEngineInterface
     public function prepareApiPlanList($user_id)
     {
         $planCollection = $this->planRepository->fetchApiPlanListData();
+        if($user_id){
+            $where = [['users__id', '=', $user_id], ['status', '=', 1]];
+            $subscription = UserSubscription::where($where)->first();
+            if($subscription){
+               $planCollection[] = [
+                   '_id' => $subscription->plan_id,
+                   '_uid' => $subscription->_uid,
+                   'title' => $subscription->plan_name,
+                   'duration' => $subscription->duration,
+                   'price' => $subscription->price,
+                   'description' => html_entity_decode($subscription->description),
+                   'status' => 1,
+                   'expiry_date' => $subscription->expiry_at,
+                   'created_at' => formatDate($subscription->created_at),
+                   'updated_at' => formatDate($subscription->updated_at)
+               ];
+            }
+        }
+
         $requireColumns = [
             '_id',
             '_uid',
             'title',
             'duration',
             'price',
+            'status' => function($key) {
+                return ($key['status'] == 1) ? 'Active' : 'Inactive';
+            },
             'description' => function($key) {
                 return html_entity_decode($key['description']);
             },
@@ -223,7 +280,7 @@ class PlanEngine extends BaseEngine implements PlanEngineInterface
             },
             'updated_at' => function ($pageData) {
                 return formatDate($pageData['updated_at']);
-            },
+            }
         ];
 
         return $this->customTableResponse($planCollection, $requireColumns);

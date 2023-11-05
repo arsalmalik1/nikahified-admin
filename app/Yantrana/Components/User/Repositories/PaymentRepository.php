@@ -20,7 +20,7 @@ class PaymentRepository extends BaseRepository implements PaymentRepositoryInter
      *
      * @var object
      */
-    protected $primaryModel = PaymentModel::class;
+    protected $primaryModel = UserPayment::class;
 
     /**
      * Fetch the record of Payment
@@ -31,10 +31,10 @@ class PaymentRepository extends BaseRepository implements PaymentRepositoryInter
     public function fetch($idOrUid)
     {
         if (is_numeric($idOrUid)) {
-            return PaymentModel::where('_id', $idOrUid)->first();
+            return UserPayment::where('_id', $idOrUid)->first();
         }
 
-        return PaymentModel::where('_uid', $idOrUid)->first();
+        return UserPayment::where('_uid', $idOrUid)->first();
     }
 
     /**
@@ -44,7 +44,7 @@ class PaymentRepository extends BaseRepository implements PaymentRepositoryInter
      *---------------------------------------------------------------- */
     public function fetchAllPayment()
     {
-        return PaymentModel::get();
+        return UserPayment::get();
     }
 
     /**
@@ -54,12 +54,12 @@ class PaymentRepository extends BaseRepository implements PaymentRepositoryInter
      *---------------------------------------------------------------- */
     public function fetchAllActiveCreditPayment()
     {
-        return PaymentModel::where('status', 1)
+        return UserPayment::where('status', 1)
             ->get();
     }
 
     /**
-     * store new plan.
+     * store new payment.
      *
      * @param  array  $input
      * @return mixed
@@ -67,18 +67,54 @@ class PaymentRepository extends BaseRepository implements PaymentRepositoryInter
     public function storePayment($input)
     {
         $keyValues = [
-            'title',
-            'price',
-            'description',
-            'duration'
+            'user__id',
+            'customer_id',
+            'plan_id',
+            'sale_id',
+            'amount',
+            'currency',
+            'status',
+            'payment_gateway',
+            'charged_at'
         ];
-        $plan = new PaymentModel;
+        $payment = new UserPayment;
         // Store New plan
-        if ($plan->assignInputsAndSave($input, $keyValues)) {
-            //plan add activity log
-            activityLog($plan->title.' plan created. ');
+        if ($payment->assignInputsAndSave($input, $keyValues)) {
+            //payment add activity log
+            activityLog('Payment created. ');
 
-            return $plan;
+            return $payment;
+        }
+
+        return false;
+    }
+
+    /**
+     * store new subscription.
+     *
+     * @param  array  $input
+     * @return mixed
+     *---------------------------------------------------------------- */
+    public function storeSubscription($input)
+    {
+        $keyValues = [
+            'expiry_at',
+            'users__id',
+            'status',
+            'payment_id',
+            'plan_id',
+            'plan_name',
+            'price',
+            'duration',
+            'description'
+        ];
+        $subscription = new UserSubscription();
+        // Store New Subscription
+        if ($subscription->assignInputsAndSave($input, $keyValues)) {
+            //payment add activity log
+            activityLog('Subscription created. ');
+
+            return $subscription;
         }
 
         return false;

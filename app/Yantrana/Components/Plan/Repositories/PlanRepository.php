@@ -134,7 +134,7 @@ class PlanRepository extends BaseRepository implements PlanRepositoryInterface
         ];
 
         return PlanModel::select('*')
-            ->latest()
+            ->latest()->where('status', 1)
             ->customTableOptions($dataTableConfig);
     }
 

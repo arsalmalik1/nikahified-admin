@@ -10,6 +10,7 @@ namespace App\Yantrana\Components\Plan\Controllers;
 use App\Yantrana\Base\BaseController;
 use App\Yantrana\Components\Plan\PlanEngine;
 use App\Yantrana\Components\Plan\Requests\PlanRequest;
+use Illuminate\Support\Facades\Request;
 
 class PlanController extends BaseController
 {
@@ -118,6 +119,21 @@ class PlanController extends BaseController
     {
         $processReaction = $this->planEngine->processDeletePlan($planUId);
 
+        return $this->responseAction(
+            $this->processResponse($processReaction, [], [], true)
+        );
+    }
+
+    /**
+     * Handle update plan status.
+     *
+     * @param  int  $planUId
+     * @return json object
+     *---------------------------------------------------------------- */
+    public function processUpdatePlanStatus(\Illuminate\Http\Request $request, $planUId)
+    {
+        $action = $request->action;
+        $processReaction = $this->planEngine->processUpdatePlanStatus($planUId, $action);
         return $this->responseAction(
             $this->processResponse($processReaction, [], [], true)
         );

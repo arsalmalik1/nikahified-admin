@@ -41,7 +41,7 @@
 
  						<!-- Duration field -->
  						<div class="col-sm-6 mb-3 mb-sm-0">
- 							<label for="lwDuration"><?= __tr('Duration Months') ?></label>
+ 							<label for="lwDuration"><?= __tr('Duration (in Days)') ?></label>
  							<input type="number" class="form-control d-block" name="duration" id="lwDuration" required digits="true">
  						</div>
  						<!-- / Duration field -->

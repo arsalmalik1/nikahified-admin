@@ -133,7 +133,7 @@ class PaymentEngine extends BaseEngine implements PaymentEngineInterface
                 $dateTime = Carbon::createFromTimestamp($chargedAt);
                 $formattedDate = $dateTime->format('Y-m-d H:i:s');
 
-                $paymentData = [
+                $storeData = [
                     'user__id' => $userId,
                     'customer_id' => $customerId,
                     'plan_id' => $planId,
@@ -144,22 +144,34 @@ class PaymentEngine extends BaseEngine implements PaymentEngineInterface
                     'payment_gateway' => 'stripe',
                     'charged_at' => $formattedDate
                 ];
-                $paymentId = UserPayment::insertGetId($paymentData);
-                $subscription = UserSubscription::where([['users__id', '=', $userId], ['status', '=', 1]])->first();
-                $expiryAt = now()->addMonths($plan->duration)->format("Y-m-d H:i:s");
-                $subscriptionData = [
-                    'plan_id' => $planId,
-                    'expiry_at' => $expiryAt,
-                    'users__id' => $userId,
-                    'status' => 1,
-                    'payment_id' => $paymentId
-                ];
-                if($subscription){
-                    UserSubscription::where('_id', $subscription->_id)->update(['status' => 0]);
-                }
-                UserSubscription::insert($subscriptionData);
 
-                return $this->engineReaction(1, ['show_message' => true], __tr('User payment saved successfully.'));
+                if ($newPayment = $this->paymentRepository->storePayment($storeData)) {
+                    //return $this->engineReaction(1, [], __tr('Payment added successfully.'));
+
+                    // Cancel existing active subscription
+                    $this->processCancelSubscription($userId);
+
+                    // Create new subscription
+                    $expiryAt = now()->addDays($plan->duration)->format("Y-m-d H:i:s");
+                    $subscriptionData = [
+                        'expiry_at' => $expiryAt,
+                        'users__id' => $userId,
+                        'status' => 1,
+                        'payment_id' => $newPayment->_id,
+                        'plan_id' => $planId,
+                        'plan_name' => $plan->title,
+                        'price' => $plan->price,
+                        'duration' => $plan->duration,
+                        'description' => $plan->description
+                    ];
+
+                    if ($newSubscription = $this->paymentRepository->storeSubscription($subscriptionData)) {
+                        return $this->engineReaction(1, [], __tr('User payment saved and subscription created successfully.'));
+                    }
+                    return $this->engineReaction(2, null, __tr('Subscription could not create.'));
+
+                }
+                return $this->engineReaction(2, null, __tr('Payment could not add.'));
             }
             return $this->engineReaction(1, ['show_message' => true], __tr('Invalid plan id submitted.'));
         }
