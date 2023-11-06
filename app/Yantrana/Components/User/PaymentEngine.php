@@ -111,10 +111,9 @@ class PaymentEngine extends BaseEngine implements PaymentEngineInterface
      *---------------------------------------------------------------- */
     public function processCreatePayment($inputData)
     {
-        $chargeId = $inputData['sale_id'];
-        $amount = $inputData['amount'];
+        $chargeId = $inputData['payment_intent_id'];
+        $amount = ($inputData['amount'] > 0) ? ($inputData['amount']/100) : 0;
         $currency = $inputData['currency'];
-        $customerId = $inputData['customer_id'];
         $chargedAt = $inputData['charge_created'];
         $planId = $inputData['plan_id'];
         $userId = $inputData['user_id'];
@@ -135,7 +134,6 @@ class PaymentEngine extends BaseEngine implements PaymentEngineInterface
 
                 $storeData = [
                     'user__id' => $userId,
-                    'customer_id' => $customerId,
                     'plan_id' => $planId,
                     'sale_id' => $chargeId,
                     'amount' => $amount,

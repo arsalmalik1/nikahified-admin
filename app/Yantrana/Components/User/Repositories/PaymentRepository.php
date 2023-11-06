@@ -68,7 +68,7 @@ class PaymentRepository extends BaseRepository implements PaymentRepositoryInter
     {
         $keyValues = [
             'user__id',
-            'customer_id',
+            'payment_intent_id',
             'plan_id',
             'sale_id',
             'amount',
