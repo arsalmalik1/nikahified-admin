@@ -158,9 +158,8 @@ class PlanEngine extends BaseEngine implements PlanEngineInterface
         ];
 
         // Check if plan updated
-        if ($this->planRepository->updatePlan($planCollection, $updateData)) {
-            $isPlanUpdate = true;
-        }
+        $this->planRepository->updatePlan($planCollection, $updateData);
+        $isPlanUpdate = true;
 
         // Check if plan updated
         if ($isPlanUpdate) {

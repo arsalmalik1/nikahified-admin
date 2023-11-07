@@ -68,17 +68,25 @@
  <!-- End of Page Wrapper -->
  @lwPush('appScripts')
  <script>
-	 tinymce.init({
-		 selector: '#description_editor',
-		 plugins: 'a11ychecker,advlist,advcode,advtable,autolink,checklist,code,codesample,directionality,emoticons,fullscreen,help,hr,image,imagetools,importcss,insertdatetime,link,lists,media,nonbreaking,pagebreak,permanentpen,preview,print,searchreplace,table,textcolor,visualblocks,wordcount',
-		 toolbar: 'undo redo | formatselect | bold italic strikethrough | alignleft aligncenter alignright alignjustify | outdent indent | numlist bullist | forecolor backcolor removeformat | pagebreak | charmap emoticons | fullscreen  preview',
-		 setup: function (editor) {
-			 editor.on('change', function () {
-				 // When the TinyMCE content changes, update the hidden field value
-				 document.getElementById('description').value = editor.getContent();
-			 });
-		 }
+	 $(document).ready(function(){
+
+		 tinymce.init({
+			 selector: '#description_editor',
+			 plugins: 'a11ychecker,advlist,advcode,advtable,autolink,checklist,code,codesample,directionality,emoticons,fullscreen,help,hr,image,imagetools,importcss,insertdatetime,link,lists,media,nonbreaking,pagebreak,permanentpen,preview,print,searchreplace,table,textcolor,visualblocks,wordcount',
+			 toolbar: 'undo redo | formatselect | bold italic strikethrough | alignleft aligncenter alignright alignjustify | outdent indent | numlist bullist | forecolor backcolor removeformat | pagebreak | charmap emoticons | fullscreen  preview',
+			 setup: function (editor) {
+				 editor.on('init', setContentToHiddenField),
+				 editor.on('change', setContentToHiddenField)
+			 }
+		 });
+
 	 });
+
+	 function setContentToHiddenField() {
+		 var editorContent = tinymce.get('description_editor').getContent(); // Get the content from TinyMCE
+		 alert(editorContent);
+		 document.getElementById('description').value = editorContent; // Set the content to the hidden field
+	 }
 
 	 function afterUploadedFile(responseData) {
  		if (responseData.reaction == 1) {
