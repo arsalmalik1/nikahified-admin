@@ -84,7 +84,6 @@
 
 	 function setContentToHiddenField() {
 		 var editorContent = tinymce.get('description_editor').getContent(); // Get the content from TinyMCE
-		 alert(editorContent);
 		 document.getElementById('description').value = editorContent; // Set the content to the hidden field
 	 }
 
