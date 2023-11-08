@@ -22,24 +22,29 @@ class StripeWebhookController extends BaseController
     public function handleWebhook(Request $request)
     {
         $payload = $request->getContent();
-        $secret = getenv('STRIPE_SECRET');
+        $webhookSecret = getenv('STRIPE_WEBHOOK_SIGNING_SECRET');
         //echo $secret; echo '<br>';
         //print_r($request->header('stripe-signature')); exit;
         // You can log the entire payload for inspection
         \Log::info('Stripe Webhook Payload: ' . $payload);
 
+        $isVerified = false;
         // Verify the Stripe signature if required
         try {
             $event = Webhook::constructEvent(
                 $payload,
                 $request->header('stripe-signature'),
-                $secret
+                $webhookSecret
             );
+            $isVerified = true;
 
-            // Event verified, process the event
-            // For example, $event->type will contain the event type
+        } catch (SignatureVerificationException $e) {
+            // Invalid signature
+            \Log::warning('Stripe webhook signature verification failed: ' . $e->getMessage());
+            return response()->json(['success' => false, 'message' => 'Not authorized'])->setStatusCode(400);
+        }
 
-            // Parse the JSON payload
+        if($isVerified === true){
             $data = json_decode($payload, true);
 
             // Check if it's a charge.succeeded event
@@ -64,14 +69,9 @@ class StripeWebhookController extends BaseController
                     UserSubscription::where('payment_id', $payment->_id)->update(['status' => 0]);
                 }
             }
-
-            \Log::info('Stripe webhook handled: ' . $event->id);
             return response()->json(['success' => true]);
-
-        } catch (SignatureVerificationException $e) {
-            // Invalid signature
-            \Log::warning('Stripe webhook signature verification failed: ' . $e->getMessage());
-            return response()->json(['success' => false, 'message' => 'Not authorized'])->setStatusCode(400);
         }
+
+
     }
 }
