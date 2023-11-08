@@ -236,12 +236,13 @@ class PlanEngine extends BaseEngine implements PlanEngineInterface
      *---------------------------------------------------------------- */
     public function prepareApiPlanList($user_id)
     {
+        $subscriptionArr['subscribed_plan'] = [];
         $planCollection = $this->planRepository->fetchApiPlanListData();
         if($user_id){
             $where = [['users__id', '=', $user_id], ['status', '=', 1]];
             $subscription = UserSubscription::where($where)->first();
             if($subscription){
-               $planCollection[] = [
+               $subscriptionArr['subscribed_plan'] = [
                    '_id' => $subscription->plan_id,
                    '_uid' => $subscription->_uid,
                    'title' => $subscription->plan_name,
@@ -268,12 +269,6 @@ class PlanEngine extends BaseEngine implements PlanEngineInterface
             'description' => function($key) {
                 return html_entity_decode($key['description']);
             },
-            'is_subscribed' => function ($key) use ($user_id){
-                return (getUserSubscribedPlanId($user_id) == $key['_id']);
-            },
-            'expiry_date' => function($key) use($user_id) {
-                return getUserSubscriptionExpiry($user_id, $key['_id']);
-            },
             'created_at' => function ($pageData) {
                 return formatDate($pageData['created_at']);
             },
@@ -282,7 +277,11 @@ class PlanEngine extends BaseEngine implements PlanEngineInterface
             }
         ];
 
-        return $this->customTableResponse($planCollection, $requireColumns);
+        $dataResponse = $this->customTableResponse($planCollection, $requireColumns);
+        $jsonContent = $dataResponse->getContent();
+        $contentArray = json_decode($jsonContent, true);
+        $contentArray['data'] = array_merge($subscriptionArr, $contentArray['data']);
+        return response()->json($contentArray);
     }
 
 }
