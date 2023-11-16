@@ -1342,9 +1342,8 @@ class UserRepository extends BaseRepository implements UserRepositoryBlueprint
     public function fetchPremiumUsers($userId)
     {
         $currentTime = Carbon::now();
-
-        return UserSubscription::where('users__id', $userId)
-            ->where('expiry_at', '>=', $currentTime)
+        $where = [['users__id', '=', $userId], ['status', '=', 1]];
+        return UserSubscription::where($where)
             ->latest()
             ->first();
     }

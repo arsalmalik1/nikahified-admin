@@ -203,6 +203,12 @@ Route::group([
             'uses' => 'User\Controllers\CreditWalletController@updateLog',
         ]);
 
+        // Get user profile data
+        Route::get('/user/get-payment-plans', [
+            'as' => 'user.payment_plans',
+            'uses' => 'User\Controllers\UserController@getUserPaymentPlans',
+        ]);
+
 
 
         /*

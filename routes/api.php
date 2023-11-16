@@ -115,39 +115,6 @@ Route::group([
             ]);
         });
 
-        // Payment related routes
-        Route::group([
-            'namespace' => 'User\ApiControllers',
-        ], function () {
-            // Get user payment
-            Route::get('/get-user-payment/{user_id}', [
-                'as' => 'api.payment.read.list',
-                'uses' => 'ApiPaymentController@getUserPayment',
-            ]);
-        });
-
-    });
-
-
-    // Payment related routes
-    Route::group([
-        'namespace' => 'User\ApiControllers',
-    ], function () {
-        // Create user payment
-        Route::post('/create-user-payment', [
-            'as' => 'api.payment.create',
-            'uses' => 'ApiPaymentController@createUserPayment',
-        ]);
-    });
-
-    Route::group([
-        'namespace' => 'User\ApiControllers',
-    ], function () {
-        // Cancel subscription
-        Route::get('/cancel-subscription/{user_id}', [
-            'as' => 'api.subscription.cancel',
-            'uses' => 'ApiPaymentController@cancelUserSubscription',
-        ]);
     });
 
     // Stripe webhook related routes
@@ -306,6 +273,30 @@ Route::group([
                 'as' => 'api.user.read.random_users',
                 'uses' => 'ApiHomeController@getRandomUsers',
             ]);
+        });
+
+        // Payment related routes
+        Route::group([
+            'namespace' => 'User\ApiControllers',
+        ], function () {
+            // Create user payment
+            Route::post('/create-user-payment', [
+                'as' => 'api.payment.create',
+                'uses' => 'ApiPaymentController@createUserPayment',
+            ]);
+
+            // Get user payment
+            Route::get('/get-user-payment/{user_id}', [
+                'as' => 'api.payment.read.list',
+                'uses' => 'ApiPaymentController@getUserPayment',
+            ]);
+
+            // Cancel subscription
+            Route::get('/cancel-subscription/{user_id}', [
+                'as' => 'api.subscription.cancel',
+                'uses' => 'ApiPaymentController@cancelUserSubscription',
+            ]);
+
         });
 
         /*

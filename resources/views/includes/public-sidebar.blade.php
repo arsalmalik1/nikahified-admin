@@ -65,6 +65,12 @@
             <span><?= __tr('My Photos') ?></span>
         </a>
     </li>
+    <li class="nav-item <?= makeLinkActive('user.payment_plans') ?>">
+        <a class="nav-link lw-ajax-link-action lw-action-with-url" data-event-callback="lwPrepareUploadPlugIn" href="<?= route('user.payment_plans', ['username' => getUserAuthInfo('profile.username')]) ?>">
+            <i class="far fa-images"></i>
+            <span><?= __tr('Payment Plans') ?></span>
+        </a>
+    </li>
     <!-- Divider -->
     <hr class="sidebar-divider mt-2 mb-2">
     <li class="nav-item <?= makeLinkActive('user.who_liked_me_view') ?>">

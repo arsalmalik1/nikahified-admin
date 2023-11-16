@@ -8,6 +8,7 @@
 
 namespace App\Yantrana\Components\User\Controllers;
 
+use App\Yantrana\Components\Plan\PlanEngine;
 use Auth;
 use Illuminate\Http\Request;
 use App\Yantrana\Base\BaseController;
@@ -32,13 +33,19 @@ class UserController extends BaseController
     protected $userEngine;
 
     /**
+     * @var  PlanEngine - Plan Engine
+     */
+    protected $planEngine;
+
+    /**
      * Constructor.
      *
      * @param  UserEngine  $userEngine - User Engine
      *-----------------------------------------------------------------------*/
-    public function __construct(UserEngine $userEngine)
+    public function __construct(UserEngine $userEngine, PlanEngine $planEngine)
     {
         $this->userEngine = $userEngine;
+        $this->planEngine = $planEngine;
     }
 
     /**
@@ -797,4 +804,20 @@ class UserController extends BaseController
             );
         }
     }
+
+    /**
+     * Get User profile view.
+     *
+     * @param  string  $userName
+     * @return json object
+     *---------------------------------------------------------------- */
+    public function getUserPaymentPlans()
+    {
+        //print_r(getUserAuthInfo('profile._id')); exit;
+
+        $processReaction = $this->planEngine->preparePlanList();
+        return $this->loadPublicView('user.payment-plans', $processReaction['data']);
+    }
+
+
 }

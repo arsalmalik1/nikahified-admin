@@ -758,8 +758,8 @@ if (! function_exists('isPremiumUser')) {
         //get current date time
         $currentDateTime = Carbon::now();
         //get latest subscription data
-        $userSubscription = UserSubscription::where('users__id', $userID)
-            ->where('expiry_at', '>=', $currentDateTime)
+        $where = [['users__id', '=', $userID], ['status', '=', 1]];
+        $userSubscription = UserSubscription::where($where)
             ->latest()
             ->first();
             // if you want to record back
