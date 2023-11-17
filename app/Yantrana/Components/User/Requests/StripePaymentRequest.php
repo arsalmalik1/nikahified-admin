@@ -31,7 +31,7 @@ class StripePaymentRequest extends BaseRequest
     public function rules()
     {
         return [
-            'payment_intent_id' => 'required|unique:user_payments',
+            'payment_intent_id' => ['required', 'unique:user_payments,sale_id'],
             'amount' => 'required|min:3|max:45',
             'currency' => 'required|min:3|max:3',
             'charge_created' => 'required',
