@@ -8,7 +8,10 @@
 
 namespace App\Yantrana\Components\User\Controllers;
 
+use App\Yantrana\Components\Plan\Models\PlanModel;
 use App\Yantrana\Components\Plan\PlanEngine;
+use App\Yantrana\Components\User\Models\UserSubscription;
+use App\Yantrana\Components\User\PaymentEngine;
 use Auth;
 use Illuminate\Http\Request;
 use App\Yantrana\Base\BaseController;
@@ -24,6 +27,8 @@ use App\Yantrana\Components\User\Requests\UserChangeEmailRequest;
 use App\Yantrana\Components\User\Requests\UserResetPasswordRequest;
 use App\Yantrana\Components\User\Requests\UserForgotPasswordRequest;
 use App\Yantrana\Components\User\Requests\UserUpdatePasswordRequest;
+use Stripe\Stripe;
+use Stripe\StripeClient;
 
 class UserController extends BaseController
 {
@@ -38,14 +43,21 @@ class UserController extends BaseController
     protected $planEngine;
 
     /**
+     * @var PaymentEngine - Payment Engine
+     */
+    protected $paymentEngine;
+
+    /**
      * Constructor.
      *
      * @param  UserEngine  $userEngine - User Engine
      *-----------------------------------------------------------------------*/
-    public function __construct(UserEngine $userEngine, PlanEngine $planEngine)
+    public function __construct(UserEngine $userEngine, PlanEngine $planEngine, PaymentEngine $paymentEngine)
     {
         $this->userEngine = $userEngine;
         $this->planEngine = $planEngine;
+        $this->paymentEngine = $paymentEngine;
+
     }
 
     /**
@@ -806,17 +818,78 @@ class UserController extends BaseController
     }
 
     /**
-     * Get User profile view.
+     * Get User payment plans view.
      *
      * @param  string  $userName
      * @return json object
      *---------------------------------------------------------------- */
     public function getUserPaymentPlans()
     {
-        //print_r(getUserAuthInfo('profile._id')); exit;
-
+        $currentPlanId = '';
+        $userId = auth()->user()->_id;
+        $where = [['users__id', '=', $userId], ['status', '=', 1]];
+        $subscription = UserSubscription::select('plan_id')->where($where)->first();
+        if($subscription){
+            $currentPlanId = $subscription->plan_id;
+        }
         $processReaction = $this->planEngine->preparePlanList();
+        $processReaction['data']['currentPlanId'] = $currentPlanId;
         return $this->loadPublicView('user.payment-plans', $processReaction['data']);
+    }
+
+    public function userPaymentCheckout(Request $request, $plan_id)
+    {
+        $data = ['planId' => $plan_id];
+        return $this->loadPublicView('user.payment-checkout', $data);
+    }
+
+    public function userPaymentCheckoutProcess(Request $request){
+        $planId = decrypt($request->plan_id);
+        $plan = PlanModel::select('_id', 'title', 'price')->where([['_id', '=', $planId], ['status', '=', 1]])->first();
+        if($plan){
+            try {
+                $stripe = new StripeClient(getenv('STRIPE_SECRET'));
+                $paymentIntent = $stripe->paymentIntents->create([
+                    'amount' => $plan->price * 100,
+                    'currency' => 'usd',
+                    'payment_method' => $request->payment_method,
+                    'description' => $plan->title.' plan purchased.',
+                    'confirm' => true,
+                    'automatic_payment_methods[enabled]' => true,
+                    'automatic_payment_methods[allow_redirects]' => 'never',
+                    'metadata' => [
+                        'user_id' => auth()->user()->_id,
+                        'plan_id' => $plan->_id
+                    ]
+                ]);
+                //echo '<pre>';
+                //print_r($paymentIntent);
+
+                $inputData = [
+                    'payment_intent_id' => $paymentIntent->id,
+                    'amount' => $paymentIntent->amount,
+                    'currency' => 'usd',
+                    'charge_created' => $paymentIntent->created,
+                    'plan_id' => $paymentIntent->metadata->plan_id,
+                    'user_id' => $paymentIntent->metadata->user_id
+                ];
+                //print_r($inputData);
+                $processReaction = $this->paymentEngine->processCreatePayment($inputData);
+
+                /*$data = [
+                    'clientSecret' => $paymentIntent->client_secret,
+                    'paymentIntentId' => $paymentIntent->id,
+                ];*/
+            } catch (CardException $th) {
+                throw new Exception("There was a problem processing your payment", 1);
+            }
+
+            return back()->withSuccess('Payment charged successfully.');
+
+        }
+        else{
+            //return back()->withErrors(['plan_id' => 'Invalid plan id submitted.']);
+        }
     }
 
 

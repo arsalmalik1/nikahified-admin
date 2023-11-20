@@ -47,7 +47,7 @@ class PlanEngine extends BaseEngine implements PlanEngineInterface
      *---------------------------------------------------------------- */
     public function preparePlanList()
     {
-        $planCollection = $this->planRepository->fetchAllPlan();
+        $planCollection = $this->planRepository->fetchAllActiveCreditPlan();
 
         $planData = [];
         if (! __isEmpty($planCollection)) {

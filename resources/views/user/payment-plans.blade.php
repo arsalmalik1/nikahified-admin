@@ -18,7 +18,6 @@
 <style>
 	.card {
 		border:none;
-		padding: 10px 50px;
 		background-color: #fff;
 		color: #000;
 	}
@@ -73,9 +72,11 @@
 							<div class="card-body-text">
 								<?= html_entity_decode($plan['description']) ?>
 							</div>
+							@if($currentPlanId != $plan['_id'])
 							<div class="text-center">
-								<button class="btn btn-outline-primary btn-lg align-center" style="border-radius:10px">Select</button>
+								<a href="{{ route('user.checkout', ['plan_id' => encrypt($plan['_id'])]) }}" class="btn btn-outline-primary btn-lg align-center" style="border-radius:10px">Select</a>
 							</div>
+							@endif
 						</div>
 					</div>
 				</div>

@@ -209,6 +209,16 @@ Route::group([
             'uses' => 'User\Controllers\UserController@getUserPaymentPlans',
         ]);
 
+        Route::get('/user/checkout/{plan_id}', [
+            'as' => 'user.checkout',
+            'uses' => 'User\Controllers\UserController@userPaymentCheckout',
+        ]);
+
+        Route::post('/user/checkout-process', [
+            'as' => 'user.checkout-process',
+            'uses' => 'User\Controllers\UserController@userPaymentCheckoutProcess',
+        ]);
+
 
 
         /*
