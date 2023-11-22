@@ -94,8 +94,8 @@
 
     let message = "{{ session()->has('success') }}";
     if(message) {
-        $('#alertMessage #body-message').html("{{ session()->get('success') }}")
-        $('#alertMessage').modal('show');
+        jQuery('#alertMessage #body-message').html("{{ session()->get('success') }}")
+        jQuery('#alertMessage').modal('show');
     }
 </script>
 </html>
