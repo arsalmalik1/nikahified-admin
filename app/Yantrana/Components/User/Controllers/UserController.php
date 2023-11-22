@@ -825,8 +825,6 @@ class UserController extends BaseController
     {
         $userId = auth()->user()->_id;
         $plan = getUserSubscribedPlan($userId);
-        //print_r($plan);
-        //return $this->loadPublicView('user.payment-plans', $processReaction['data']);
 
         $data = ['planData' => $plan];
         return $this->loadPublicView('user.my-plan', $data);

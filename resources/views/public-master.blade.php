@@ -91,5 +91,11 @@
         $('.credits-display-text').text(response.credits.credits);
             creditBadgeShow();
     }
+
+    let message = "{{ session()->has('success') }}";
+    if(message) {
+        $('#alertMessage #body-message').html("{{ session()->get('success') }}")
+        $('#alertMessage').modal('show');
+    }
 </script>
 </html>

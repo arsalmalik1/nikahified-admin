@@ -78,12 +78,6 @@
 <script>
 	document.addEventListener("DOMContentLoaded", function(event) {
 
-		let message = "{{ session()->has('success') }}";
-		if(message) {
-			$('#alertMessage #body-message').html("{{ session()->get('success') }}")
-			$('#alertMessage').modal('show');
-		}
-
 		let stripe = Stripe('pk_test_51O07g9HHpxbwH6cFn5rtzfYlDtQqMlvhfsd7bTkKrJj0W106vBhZ4UmY0n7DxnZa9fARrnknxVW7ThEAGYRlxnkW00PkhK7a2v');
 		const elements = stripe.elements();
 		const cardElement = elements.create('card', {
