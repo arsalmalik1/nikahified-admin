@@ -74,15 +74,18 @@
 	</div>
 </div>
 <!-- / liked people container -->
-@lwPush('appScripts')
 <script src="https://js.stripe.com/v3/"></script>
 <script>
-	$(document).ready(function(){
+	document.addEventListener("DOMContentLoaded", function(event) {
 
 		let message = "{{ session()->has('success') }}";
 		if(message) {
-			$('#alertMessage #body-message').html("{{ session()->get('success') }}")
-			$('#alertMessage').modal('show');
+			// Replace 'your.route.name' with the actual name of your route
+			var routeUrl = "{{ route('user.my-plan') }}";
+
+			// Redirect to the generated route URL
+			window.location.href = routeUrl;
+
 		}
 
 		let stripe = Stripe('pk_test_51O07g9HHpxbwH6cFn5rtzfYlDtQqMlvhfsd7bTkKrJj0W106vBhZ4UmY0n7DxnZa9fARrnknxVW7ThEAGYRlxnkW00PkhK7a2v');
@@ -118,4 +121,3 @@
 		});
 	});
 </script>
-@lwPushEnd
