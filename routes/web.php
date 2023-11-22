@@ -204,6 +204,12 @@ Route::group([
         ]);
 
         // Get user profile data
+        Route::get('/user/get-my-plan', [
+            'as' => 'user.my-plan',
+            'uses' => 'User\Controllers\UserController@getMySubscribedPlan',
+        ]);
+
+        // Get user profile data
         Route::get('/user/get-payment-plans', [
             'as' => 'user.payment_plans',
             'uses' => 'User\Controllers\UserController@getUserPaymentPlans',

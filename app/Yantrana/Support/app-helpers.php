@@ -1268,3 +1268,26 @@ if(! function_exists('updateSubscriptionsStatus')) {
         }
     }
 }
+
+if(! function_exists('getUserSubscribedPlan')) {
+    function getUserSubscribedPlan($user_id) {
+        $subscriptionArr['subscribed_plan'] = [];
+        $where = [['users__id', '=', $user_id], ['status', '=', 1]];
+        $subscription = UserSubscription::where($where)->first();
+        if($subscription){
+            $subscriptionArr['subscribed_plan'] = [
+                '_id' => $subscription->plan_id,
+                '_uid' => $subscription->_uid,
+                'title' => $subscription->plan_name,
+                'duration' => $subscription->duration,
+                'price' => $subscription->price,
+                'description' => html_entity_decode($subscription->description),
+                'status' => 1,
+                'expiry_date' => $subscription->expiry_at,
+                'created_at' => formatDate($subscription->created_at),
+                'updated_at' => formatDate($subscription->updated_at)
+            ];
+        }
+        return $subscriptionArr;
+    }
+}

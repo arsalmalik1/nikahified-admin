@@ -14,18 +14,17 @@
 		<span class="text-primary"><i class="fa fa-thumbs-up" aria-hidden="true"></i></span>
 		<?= __tr('Payment Checkout') ?></h5>
 </div>
-
+<style>
+	.ElementsApp, .ElementsApp .InputElement {
+		color: #fff !important;
+	}
+</style>
 <!-- payment checkout container -->
 <div class="container-fluid">
 	<div class="row">
-		<div class="panel panel-default">
+		<div class="panel panel-default col-md-4">
 			<div class="panel-body">
 				<h1 class="text-3xl md:text-5xl font-extrabold text-center uppercase mb-12 bg-gradient-to-r from-indigo-400 via-purple-500 to-indigo-600 bg-clip-text text-transparent transform -rotate-2">Make A Payment</h1>
-				@if (session()->has('success'))
-					<div class="alert alert-success">
-						{{ session()->get('success') }}
-					</div>
-				@endif
 				<form action="{{ route('user.checkout-process') }}" method="POST" id="card-form">
 					@csrf
 					{{--<div class="mb-3">
@@ -48,39 +47,73 @@
 				</form>
 			</div>
 		</div>
+
+		<div class="modal fade" id="alertMessage" tabindex="-1" role="dialog" aria-labelledby="messengerModalLabel"
+			 aria-hidden="true">
+			<div class="modal-dialog modal-md" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button id="lwChatSidebarToggle" class="btn btn-link d-md-none rounded-circle mr-3">
+							<i class="fa fa-bars"></i>
+						</button>
+						<h5 class="modal-title">
+							<?= __tr('Payment Successful') ?>
+						</h5>
+						<button type="button" class="close" data-dismiss="modal" aria-label="<?= __tr('Close') ?>"><span
+									aria-hidden="true">&times;</span></button>
+					</div>
+					<div class="modal-body text-center">
+						<p id="body-message">
+							<?= __tr('Thankyou for subscribing') ?>
+						</p>
+						<a href="{{ route('home_page') }}" class="btn btn-outline-primary btn-lg align-center" style="border-radius:10px">Find Your Match</a>
+					</div>
+				</div>
+			</div>
+		</div>
 	</div>
 </div>
 <!-- / liked people container -->
 <script src="https://js.stripe.com/v3/"></script>
 <script>
-	let stripe = Stripe('pk_test_51O07g9HHpxbwH6cFn5rtzfYlDtQqMlvhfsd7bTkKrJj0W106vBhZ4UmY0n7DxnZa9fARrnknxVW7ThEAGYRlxnkW00PkhK7a2v')
-	const elements = stripe.elements()
-	const cardElement = elements.create('card', {
-		style: {
-			base: {
-				fontSize: '16px'
+	document.addEventListener("DOMContentLoaded", function(event) {
+
+		let message = "{{ session()->has('success') }}";
+		if(message) {
+			$('#alertMessage #body-message').html("{{ session()->get('success') }}")
+			$('#alertMessage').modal('show');
+		}
+
+		let stripe = Stripe('pk_test_51O07g9HHpxbwH6cFn5rtzfYlDtQqMlvhfsd7bTkKrJj0W106vBhZ4UmY0n7DxnZa9fARrnknxVW7ThEAGYRlxnkW00PkhK7a2v');
+		const elements = stripe.elements();
+		const cardElement = elements.create('card', {
+			style: {
+				base: {
+					fontSize: '16px',
+					color: '#fff'
+				}
 			}
-		}
-	})
-	const cardForm = document.getElementById('card-form')
-	const cardName = document.getElementById('card-name')
-	cardElement.mount('#card')
-	cardForm.addEventListener('submit', async (e) => {
-		e.preventDefault()
-		const { paymentMethod, error } = await stripe.createPaymentMethod({
-			type: 'card',
-			card: cardElement,
-			billing_details: {}
-		})
-		if (error) {
-			console.log(error)
-		} else {
-			let input = document.createElement('input')
-			input.setAttribute('type', 'hidden')
-			input.setAttribute('name', 'payment_method')
-			input.setAttribute('value', paymentMethod.id)
-			cardForm.appendChild(input)
-			cardForm.submit()
-		}
-	})
+		});
+		const cardForm = document.getElementById('card-form');
+		const cardName = document.getElementById('card-name');
+		cardElement.mount('#card');
+		cardForm.addEventListener('submit', async (e) => {
+			e.preventDefault();
+			const { paymentMethod, error } = await stripe.createPaymentMethod({
+				type: 'card',
+				card: cardElement,
+				billing_details: {}
+			});
+			if (error) {
+				console.log(error);
+			} else {
+				let input = document.createElement('input');
+				input.setAttribute('type', 'hidden');
+				input.setAttribute('name', 'payment_method');
+				input.setAttribute('value', paymentMethod.id);
+				cardForm.appendChild(input);
+				cardForm.submit();
+			}
+		});
+	});
 </script>

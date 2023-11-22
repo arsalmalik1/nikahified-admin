@@ -818,6 +818,22 @@ class UserController extends BaseController
     }
 
     /**
+     * Get User subscribed plan view.
+     * @return json object
+     *---------------------------------------------------------------- */
+    public function getMySubscribedPlan()
+    {
+        $userId = auth()->user()->_id;
+        $plan = getUserSubscribedPlan($userId);
+        //print_r($plan);
+        //return $this->loadPublicView('user.payment-plans', $processReaction['data']);
+
+        $data = ['planData' => $plan];
+        return $this->loadPublicView('user.my-plan', $data);
+
+    }
+
+    /**
      * Get User payment plans view.
      *
      * @param  string  $userName
@@ -832,7 +848,7 @@ class UserController extends BaseController
         if($subscription){
             $currentPlanId = $subscription->plan_id;
         }
-        $processReaction = $this->planEngine->preparePlanList();
+        $processReaction = $this->planEngine->preparePlanList([['status', '=', 1]]);
         $processReaction['data']['currentPlanId'] = $currentPlanId;
         return $this->loadPublicView('user.payment-plans', $processReaction['data']);
     }
@@ -883,8 +899,8 @@ class UserController extends BaseController
             } catch (CardException $th) {
                 throw new Exception("There was a problem processing your payment", 1);
             }
-
-            return back()->withSuccess('Payment charged successfully.');
+            $success = __tr('Thankyou for subscribing').' '.$plan->title;
+            return back()->withSuccess($success);
 
         }
         else{

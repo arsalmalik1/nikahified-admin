@@ -42,9 +42,13 @@ class PlanRepository extends BaseRepository implements PlanRepositoryInterface
      *
      * @return array
      *---------------------------------------------------------------- */
-    public function fetchAllPlan()
+    public function fetchAllPlan($where = false)
     {
-        return PlanModel::get();
+        $query = PlanModel::query();
+        if($where){
+            $query->where($where);
+        }
+        return $query->get();
     }
 
     /**

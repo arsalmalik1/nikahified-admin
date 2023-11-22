@@ -65,6 +65,12 @@
             <span><?= __tr('My Photos') ?></span>
         </a>
     </li>
+    <li class="nav-item <?= makeLinkActive('user.my-plan') ?>">
+        <a class="nav-link lw-ajax-link-action lw-action-with-url" data-event-callback="lwPrepareUploadPlugIn" href="<?= route('user.my-plan', ['username' => getUserAuthInfo('profile.username')]) ?>">
+            <i class="far fa-images"></i>
+            <span><?= __tr('My Plan') ?></span>
+        </a>
+    </li>
     <li class="nav-item <?= makeLinkActive('user.payment_plans') ?>">
         <a class="nav-link lw-ajax-link-action lw-action-with-url" data-event-callback="lwPrepareUploadPlugIn" href="<?= route('user.payment_plans', ['username' => getUserAuthInfo('profile.username')]) ?>">
             <i class="far fa-images"></i>

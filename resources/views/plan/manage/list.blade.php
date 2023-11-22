@@ -56,7 +56,6 @@
 										@else
 											<a data-callback="onStatusChange" data-method="post" class="dropdown-item lw-ajax-link-action" href="<?= route('manage.plan.update-status', ['planUId' => $plan['_uid'], 'action' => 'active']) ?>"><i class="fas fa-check"></i> <?= __tr('Activate') ?></a>
 										@endif
-										<a data-callback="onDelete" data-method="post" class="dropdown-item lw-ajax-link-action" href="<?= route('manage.plan.write.delete', ['planUId' => $plan['_uid']]) ?>"><i class="fas fa-trash-alt"></i> <?= __tr('Delete') ?></a>
 									</div>
 								</div>
 							</td>
